@@ -4,7 +4,7 @@
 ## 安装
 1. 克隆
 ```
-git clone https://github.com/sumswap/SummaSwap-v3-deploy.git
+git clone https://github.com/sumswap/sumswap-v3-core.git
 ```
 2. 安装依赖
 ```
