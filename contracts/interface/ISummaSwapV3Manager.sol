@@ -8,15 +8,14 @@ import './IPeripheryPayments.sol';
 import './IPeripheryImmutableState.sol'; 
 import './IERC721Metadata.sol'; 
 import './IERC721Enumerable.sol'; 
-import './IERC721Permit.sol'; 
+import './IERC721.sol'; 
 
 interface ISummaSwapV3Manager is
     IPoolInitializer,
     IPeripheryPayments,
     IPeripheryImmutableState,
     IERC721Metadata,
-    IERC721Enumerable,
-    IERC721Permit
+    IERC721Enumerable
 {
     /// @notice Emitted when liquidity is increased for a position NFT
     /// @dev Also emitted when a token is minted
