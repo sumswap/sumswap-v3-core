@@ -117,6 +117,13 @@ contract TradeMint is ITradeMint, Context, Owned {
         uint256 tradeVolume
     );
 
+    event SnapshotMintLiquidity(
+        uint256 tokenId,
+        address poolAddress,
+        int24 _tickLower,
+        int24 _tickUpper
+    );
+    
     event SnapshotLiquidity(
         uint256 tokenId,
         address poolAddress,
@@ -432,7 +439,6 @@ contract TradeMint is ITradeMint, Context, Owned {
             token1,
             fee
         );
-        address userAddress = iSummaSwapV3Manager.ownerOf(tokenId);
         if (isReward[poolAddress]) {
             (
                 uint256 liquidityIncentiveGrowthInPosition,
@@ -749,6 +755,7 @@ contract TradeMint is ITradeMint, Context, Owned {
 
     function withdrawByTokenId(uint256 tokenId) public {
         withdrawTokenFromPri();
+        require(msg.sender == iSummaSwapV3Manager.ownerOf(tokenId),"not allowed!");
         uint256 amount = withdrawSettlementByTokenId(tokenId);
         uint256 pledge = amount.mul(pledgeRate).div(100);
         if (pledge < minPledge) {
@@ -1211,7 +1218,6 @@ contract TradeMint is ITradeMint, Context, Owned {
         require(_msgSender() == address(iSummaSwapV3Manager));
         PoolInfo storage poolInfo = poolInfoByPoolAddress[poolAddress];
         if (isReward[poolAddress]) {
-            Position storage postion = _positions[tokenId];
             if (
                 poolInfo.lastSettlementBlock.add(settlementBlock) <=
                 block.number &&
@@ -1249,7 +1255,6 @@ contract TradeMint is ITradeMint, Context, Owned {
         require(_msgSender() == address(iSummaSwapV3Manager));
         PoolInfo storage poolInfo = poolInfoByPoolAddress[poolAddress];
         if (isReward[poolAddress]) {
-            Position storage postion = _positions[tokenId];
             if (
                 poolInfo.lastSettlementBlock.add(settlementBlock) <=
                 block.number &&
@@ -1269,7 +1274,7 @@ contract TradeMint is ITradeMint, Context, Owned {
                 _tickLower,
                 _tickUpper
             );
-            emit SnapshotLiquidity(
+            emit SnapshotMintLiquidity(
                 tokenId,
                 poolAddress,
                 _tickLower,
