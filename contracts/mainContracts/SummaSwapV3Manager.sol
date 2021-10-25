@@ -1,5 +1,3 @@
-// SPDX-License-Identifier: GPL-2.0-or-later
-
 pragma solidity =0.7.6;
 pragma abicoder v2;
 
@@ -7,7 +5,7 @@ import '../interface/ISummaSwapV3Manager.sol';
 import '../interface/ISummaSwapV3NFTDescriptor.sol';
 import '../interface/trademint/ITradeMint.sol';
 import '../abstract/Multicall.sol';
-import '../abstract/ERC721Permit.sol';
+import '../abstract/ERC721.sol';
 import '../abstract/PeripheryImmutableState.sol';
 import '../abstract/PoolInitializer.sol';
 import '../abstract/LiquidityManagement.sol';
@@ -23,7 +21,7 @@ import '../libraries/Owned.sol';
 contract SummaSwapV3Manager is
     ISummaSwapV3Manager,
     Multicall,
-    ERC721Permit,
+    ERC721,
     PeripheryImmutableState,
     PoolInitializer,
     LiquidityManagement,
@@ -73,7 +71,7 @@ contract SummaSwapV3Manager is
         address _factory,
         address _WETH9,
         address _tokenDescriptor_
-    ) ERC721Permit('SummaSwap V3 Positions NFT-V1', 'SUM-V3-POS', '1') PeripheryImmutableState(_factory, _WETH9) {
+    ) ERC721('SummaSwap V3 Positions NFT-V1', 'SUM-V3-POS') PeripheryImmutableState(_factory, _WETH9) {
         _tokenDescriptor = _tokenDescriptor_;
     }
 
@@ -391,9 +389,7 @@ contract SummaSwapV3Manager is
         _burn(tokenId);
     }
 
-    function _getAndIncrementNonce(uint256 tokenId) internal override returns (uint256) {
-        return uint256(_positions[tokenId].nonce++);
-    }
+    
 
     /// @inheritdoc IERC721
     function getApproved(uint256 tokenId) public view override(ERC721, IERC721) returns (address) {
